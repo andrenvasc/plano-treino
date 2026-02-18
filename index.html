@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andre — Plano Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0c;--surface:#141418;--surface2:#1c1c22;--surface3:#24242c;--border:#2a2a34;--text:#e8e8ed;--text2:#9898a8;--text3:#68687a;--accent:#22c55e;--accent2:#16a34a;--accent-glow:rgba(34,197,94,.15);--blue:#3b82f6;--orange:#f97316;--purple:#a855f7;--red:#ef4444;--yellow:#eab308;--pink:#ec4899;--cyan:#06b6d4;--radius:16px;--radius-sm:10px;--radius-xs:6px}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}::selection{background:var(--accent);color:var(--bg)}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.hero{position:relative;padding:60px 24px 40px;text-align:center;overflow:hidden}.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 50% 0%,var(--accent-glow),transparent);pointer-events:none}.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,var(--accent),#86efac);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.hero p{color:var(--text2);font-size:1rem}.hero .stats{display:flex;justify-content:center;gap:24px;margin-top:20px;flex-wrap:wrap}.hero .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 20px;font-family:'JetBrains Mono',monospace;font-size:.85rem}.hero .stat span{color:var(--accent);font-weight:600}
+.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 16px}.nav{display:flex;gap:4px;overflow-x:auto;max-width:900px;margin:0 auto;padding:10px 0;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{flex-shrink:0;background:transparent;border:none;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;padding:8px 16px;border-radius:var(--radius-xs);cursor:pointer;transition:all .2s;white-space:nowrap}.nav button:hover{color:var(--text);background:var(--surface)}.nav button.active{color:var(--bg);background:var(--accent);font-weight:600}
+.main{max-width:900px;margin:0 auto;padding:24px 16px 100px}.day-section{display:none;animation:fadeUp .4s ease}.day-section.active{display:block}@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:border-color .2s}.card:hover{border-color:var(--accent)}.card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}.card-header .icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}.card-header h3{font-size:1.1rem;font-weight:700;flex:1}.card-header .tag{font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+.exercise{border-bottom:1px solid var(--border);padding:14px 0}.exercise:last-child{border-bottom:none}.ex-top{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center}.exercise .num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600}.exercise .info h4{font-size:.95rem;font-weight:600;margin-bottom:2px}.exercise .info .muscle{color:var(--text3);font-size:.78rem}.exercise .sets{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:500;color:var(--accent);text-align:right;white-space:nowrap}.exercise .info .note{color:var(--text2);font-size:.78rem;font-style:italic;margin-top:2px}
+.ex-media{margin-top:10px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}.ex-media a{display:block;position:relative;border-radius:var(--radius-xs);overflow:hidden;border:1px solid var(--border);width:200px;flex-shrink:0;text-decoration:none}.ex-media a img{width:100%;height:112px;object-fit:cover;display:block;transition:transform .3s}.ex-media a:hover img{transform:scale(1.05)}.ex-media a .play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s}.ex-media a:hover .play-btn{opacity:1}.play-btn span{width:40px;height:40px;background:rgba(255,0,0,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff}
+.superset-label{display:inline-flex;align-items:center;gap:6px;background:var(--accent-glow);border:1px solid rgba(34,197,94,.3);color:var(--accent);font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:20px;margin:16px 0 4px;text-transform:uppercase;letter-spacing:.5px}
+.meal{display:grid;grid-template-columns:auto 1fr;gap:0 16px;padding:14px 0;border-bottom:1px solid var(--border)}.meal:last-child{border-bottom:none}.meal .time-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:60px}.meal .time-emoji{font-size:1.3rem}.meal .time{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text3)}.meal .meal-info h4{font-size:.92rem;font-weight:600;margin-bottom:4px}.meal .meal-info p{color:var(--text2);font-size:.82rem;line-height:1.6}.meal .macros{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.macro-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;padding:3px 8px;border-radius:4px;background:var(--surface2)}.macro-tag.p{color:#22c55e;border:1px solid rgba(34,197,94,.2)}.macro-tag.c{color:#3b82f6;border:1px solid rgba(59,130,246,.2)}.macro-tag.f{color:#f97316;border:1px solid rgba(249,115,22,.2)}.macro-tag.kcal{color:#eab308;border:1px solid rgba(234,179,8,.2)}
+.supp-grid{display:flex;flex-wrap:wrap;gap:8px}.supp-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:.78rem;font-weight:500;border:1px solid var(--border);background:var(--surface2)}.supp-pill .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.supp-pill.new::after{content:'NOVO';font-size:.55rem;font-weight:700;color:var(--orange);background:rgba(249,115,22,.15);padding:1px 5px;border-radius:3px;margin-left:2px}
+.phase-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:12px}.phase-card h4{font-size:.9rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}.phase-card .phase-badge{font-size:.65rem;padding:3px 8px;border-radius:12px;font-weight:600}.phase-card p{color:var(--text2);font-size:.82rem;line-height:1.6}
+.pace-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.82rem}.pace-table th{text-align:left;padding:8px 12px;background:var(--surface3);color:var(--accent);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px}.pace-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2)}.pace-table tr:last-child td{border-bottom:none}
+.sleep-item{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}.sleep-item:last-child{border-bottom:none}.sleep-item .sleep-time{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:600;color:var(--purple)}.sleep-item p{color:var(--text2);font-size:.85rem;line-height:1.5}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}@media(max-width:700px){.week-grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:450px){.week-grid{grid-template-columns:repeat(2,1fr)}}.week-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;cursor:pointer;transition:all .25s}.week-card:hover{border-color:var(--accent);transform:translateY(-2px)}.week-card .wday{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px}.week-card .wemoji{font-size:1.6rem;margin-bottom:6px}.week-card .wlabel{font-size:.78rem;font-weight:600}.week-card .wcal{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text3);margin-top:4px}
+.finisher{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(239,68,68,.1));border:1px solid rgba(249,115,22,.2);border-radius:var(--radius-sm);padding:14px 16px;margin-top:12px}.finisher h4{color:var(--orange);font-size:.85rem;font-weight:700;margin-bottom:4px}.finisher p{color:var(--text2);font-size:.82rem}
+.warmup{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(6,182,212,.08));border:1px solid rgba(34,197,94,.2);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px}.warmup h4{color:var(--accent);font-size:.85rem;font-weight:700;margin-bottom:4px}.warmup p{color:var(--text2);font-size:.82rem}
+.daily-summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}.daily-chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:.78rem;font-weight:500}.daily-chip .chip-dot{width:8px;height:8px;border-radius:50%}
+.alcohol-note{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(236,72,153,.08));border:1px solid rgba(168,85,247,.2);border-radius:var(--radius-sm);padding:14px 16px;margin-top:12px}.alcohol-note h4{color:var(--purple);font-size:.85rem;font-weight:700;margin-bottom:4px}.alcohol-note p{color:var(--text2);font-size:.82rem;line-height:1.5}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:20px 0 8px;border-bottom:1px solid var(--border);margin-bottom:12px}
+@media(max-width:600px){.ex-top{grid-template-columns:36px 1fr}.exercise .sets{grid-column:2;text-align:left}.hero h1{font-size:1.8rem}.card{padding:16px}.ex-media a{width:160px}.ex-media a img{height:90px}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>PLANO COMPLETO</h1>
+  <p>Treino · Dieta · Suplementos · Recuperação</p>
+  <div class="stats">
+    <div class="stat"><span>72</span>kg</div><div class="stat"><span>1.71</span>m</div>
+    <div class="stat"><span>2.150</span>kcal/dia</div><div class="stat"><span>155</span>g prot</div>
+    <div class="stat">Meta: <span>5K sub-30</span></div>
+  </div>
+</div>
+<div class="nav-wrap"><div class="nav" id="nav"></div></div>
+<div class="main" id="main"></div>
+
+<script>
+// Verified YouTube video IDs for exercise tutorials
+const YT={
+  'Supino com Halteres':'VmB1G1K7v94',
+  'Remada na Máquina/Cable':'xQNrFHEMhI4',
+  'Shoulder Press':'qEwKCR5JCog',
+  'Face Pull':'rep-qVOkqgk',
+  'Rosca Bíceps':'ykJmrZ5v0Oo',
+  'Tríceps Corda':'2-LAMcpzODU',
+  'Leg Press Horizontal':'IZxyjW7MPJQ',
+  'Stiff com Halteres':'jEy_czb3RKA',
+  'Bulgarian Split Squat':'2C-uNgKwPLE',
+  'Hip Thrust':'SEdqd1n0cvg',
+  'Panturrilha em Pé':'gwLzBJYoWlI',
+  'Prancha Frontal':'ASdvN_XEl_c',
+  'Russian Twist':'wkD8rjkodUI',
+  'Goblet Squat':'MeIiIdhvXT4',
+  'Push-Up':'IODxDxX7oi4',
+  'Remada Unilateral':'pYcpY20QaE8',
+  'Lunge Reverso':'xrPteyQLGAo',
+  'Mountain Climbers':'nmwgirgXLYM',
+  'Chest Fly':'Iwe6AmxVf7o',
+  'Thruster':'M030vFO5mKg',
+  'TRX Row':'VjbxqPMDuKI',
+  'Prancha c/ Shoulder Tap':'wcEkN-FkBCA'
+};
+
+const DAYS=[
+  {id:'overview',emoji:'📊',short:'Visão Geral'},
+  {id:'seg',emoji:'💪',short:'Upper Body',color:'#22c55e',label:'SEG'},
+  {id:'ter',emoji:'🏃',short:'Corrida',color:'#3b82f6',label:'TER'},
+  {id:'qua',emoji:'🏃',short:'Corrida',color:'#3b82f6',label:'QUA'},
+  {id:'qui',emoji:'🦵',short:'Lower + Core',color:'#22c55e',label:'QUI'},
+  {id:'sex',emoji:'🛋️',short:'OFF',color:'#68687a',label:'SEX'},
+  {id:'sab',emoji:'⚡',short:'Full Body',color:'#f97316',label:'SÁB'},
+  {id:'dom',emoji:'🛋️',short:'OFF',color:'#68687a',label:'DOM'},
+  {id:'sleep',emoji:'😴',short:'Sono'},
+];
+
+const S_FAST=[{n:'SAMe 400mg',note:'jejum'}];
+const S_BRK=[{n:'Omega-3 Plus'},{n:'CoQ10 Ubiquinol 100mg'},{n:'Vitamin K2 (MK-7)'},{n:'Curcumin Elite'},{n:'Multi One-Per-Day'},{n:'Pycnogenol 100mg'},{n:'L-Carnitine 500mg'},{n:'B12 1mg',note:'sublingual'},{n:'Optimized Folate'},{n:'Quick Brain Nootropic'},{n:'Digest Complete'},{n:'L-Theanine 200mg',note:'com café',nw:1},{n:'Creatina 5g'}];
+const S_LUN=[{n:'Berberine 500mg',nw:1}];
+const S_NIT=[{n:'Neuro-Mag (Mg L-Threonate)'},{n:'Ashwagandha'},{n:'NAC 600mg'},{n:'Glutathione, Cysteine & C'},{n:'Citicoline'},{n:'Berberine 500mg (2ª dose)',nw:1}];
+
+const sp=(ss,c='#22c55e')=>`<div class="supp-grid">${ss.map(s=>`<span class="supp-pill${s.nw?' new':''}"><span class="dot" style="background:${c}"></span>${s.n}${s.note?` <span style="color:var(--text3);font-size:.65rem">(${s.note})</span>`:''}</span>`).join('')}</div>`;
+
+function ex(num,name,sets,muscles,note='',color='var(--accent)'){
+  const ytId=YT[name]||'';
+  const thumb=ytId?`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`:'';
+  const url=ytId?`https://www.youtube.com/watch?v=${ytId}`:`https://www.youtube.com/results?search_query=${encodeURIComponent(name+' exercise tutorial')}`;
+  return `<div class="exercise">
+    <div class="ex-top">
+      <div class="num" style="background:${color}22;color:${color}">${num}</div>
+      <div class="info"><h4>${name}</h4><div class="muscle">${muscles}</div>${note?`<div class="note">${note}</div>`:''}</div>
+      <div class="sets">${sets}</div>
+    </div>
+    <div class="ex-media">
+      <a href="${url}" target="_blank" rel="noopener">
+        <img src="${thumb||`https://placehold.co/200x112/1c1c22/9898a8?text=${encodeURIComponent(name)}`}" alt="${name}" loading="lazy">
+        <div class="play-btn"><span>▶</span></div>
+      </a>
+    </div>
+  </div>`;
+}
+
+function ml(emoji,time,title,desc,macros){
+  const mh=macros?`<div class="macros">${macros.kcal?`<span class="macro-tag kcal">${macros.kcal} kcal</span>`:''}${macros.p?`<span class="macro-tag p">${macros.p}g P</span>`:''}${macros.c?`<span class="macro-tag c">${macros.c}g C</span>`:''}${macros.f?`<span class="macro-tag f">${macros.f}g G</span>`:''}</div>`:'';
+  return `<div class="meal"><div class="time-col"><span class="time-emoji">${emoji}</span><span class="time">${time}</span></div><div class="meal-info"><h4>${title}</h4><p>${desc}</p>${mh}</div></div>`;
+}
+const chip=(c,t)=>`<div class="daily-chip"><span class="chip-dot" style="background:${c}"></span>${t}</div>`;
+
+// ===== DETAILED MEALS =====
+const MEALS_TRAIN = `
+${ml('💊','7:00','SAMe (Jejum)','1 cápsula de SAMe 400mg com 1 copo grande de água (300ml). Esperar 30 min antes de comer.',null)}
+${ml('🍳','7:30','Café da Manhã','<strong>Opção 1:</strong> 3 ovos mexidos (usar 1 col. chá de azeite na frigideira) + 1 fatia de pão integral + ½ abacate fatiado + 1 xícara de café com 1 cáps L-Theanine.<br><strong>Opção 2:</strong> 1 tapioca média (2 col. sopa de goma) + 80g de frango desfiado + 1 fatia de queijo muçarela + 1 banana.<br><strong>Opção 3:</strong> 2 ovos + 2 claras mexidos + 40g de aveia com 1 banana amassada + café.',{kcal:500,p:35,c:35,f:22})}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos do café (tomar COM a refeição)</div>${sp(S_BRK)}</div>
+${ml('🥜','10:30','Lanche da Manhã','<strong>Opção 1:</strong> 1 punhado de castanhas mistas (30g ≈ 2 col. sopa) + 1 maçã ou pera.<br><strong>Opção 2:</strong> 1 pote pequeno de iogurte grego natural (170g) + 3 col. sopa de granola sem açúcar + 5 morangos.<br><strong>Opção 3:</strong> 1 banana + 1 col. sopa de pasta de amendoim.',{kcal:250,p:10,c:25,f:12})}
+${ml('🍛','12:30','Almoço — Marmita Brasileira','<strong>Arroz:</strong> 4 col. sopa cheias (≈150g cozido)<br><strong>Feijão:</strong> 1 concha média (≈80g)<br><strong>Proteína:</strong> 1 pedaço de frango (≈150g = tamanho da palma da mão) OU 4 col. sopa cheias de carne moída OU 1 pedaço de porco equivalente<br><strong>Salada:</strong> à vontade — alface, tomate (3 fatias), cenoura ralada (2 col. sopa), beterraba<br><strong>Gordura:</strong> 1 fio de azeite por cima (1 col. chá)<br>+ 1 cáps Berberine 500mg',{kcal:650,p:45,c:60,f:18})}
+${ml('🍌','16:00','Pré-treino','<strong>Opção 1:</strong> 1 banana média + 1 col. sopa rasa de pasta de amendoim<br><strong>Opção 2:</strong> 1 barra de proteína (20-25g prot)<br><strong>Opção 3:</strong> 1 fatia de pão integral + 1 col. chá de mel + café (se antes das 15h)',{kcal:200,p:8,c:30,f:8})}
+${ml('🏋️','17–18h','Treino','Água durante o treino (pelo menos 500ml). Pode adicionar BCAA se quiser.',null)}
+${ml('🥤','18:15','Pós-treino (até 30min após)','<strong>Opção 1:</strong> 1 scoop de Whey (30g) batido com 1 banana + 200ml de leite<br><strong>Opção 2:</strong> 1 scoop de Whey + 200ml de água + 1 banana por fora<br><strong>Opção 3:</strong> Shake completo: 1 scoop Whey + 200ml leite + 1 banana + 3 col. sopa de aveia<br>+ 1 col. chá rasa de creatina (5g) misturada no shake ou em água',{kcal:300,p:30,c:35,f:5})}
+${ml('🌙','20:00','Jantar','<strong>Opção 1:</strong> 1 filé de frango grelhado (150g = palma da mão) + 1 batata doce média cozida (150g ≈ tamanho do punho) + 1 xícara de brócolis refogado com alho<br><strong>Opção 2:</strong> Omelete de 3 ovos + 2 col. sopa de legumes picados (pimentão, abobrinha, cebola) + salada verde com azeite<br><strong>Opção 3:</strong> 4 col. sopa de carne moída + 3 col. sopa de arroz integral + salada',{kcal:500,p:40,c:40,f:15})}
+${ml('😴','21:30','Ceia + Suplementos da Noite','1 xícara de chá de camomila. Opcional: 2 castanhas-do-pará (selênio) OU 3 col. sopa de cottage cheese.',null)}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos da noite</div>${sp(S_NIT,'#a855f7')}</div>`;
+
+const MEALS_OFF = `
+${ml('💊','7:00','SAMe (Jejum)','1 cápsula + 1 copo grande de água',null)}
+${ml('🍳','7:30','Café da Manhã (LOW CARB)','<strong>Opção 1:</strong> 3 ovos mexidos com azeite + ½ abacate + 5 tomates cereja. SEM pão.<br><strong>Opção 2:</strong> 2 ovos + 2 claras + 30g de queijo + 1 fruta pequena.<br>Café + suplementos da manhã.',{kcal:420,p:30,c:15,f:28})}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos do café</div>${sp(S_BRK)}</div>
+${ml('🥜','10:30','Lanche','1 punhado de castanhas (30g) + 1 maçã',{kcal:220,p:6,c:20,f:14})}
+${ml('🍛','12:30','Almoço (CARB REDUZIDO)','Marmita com <strong>menos arroz</strong> (2 col. sopa ≈ 100g) + 1 concha de feijão + proteína normal (150g) + salada à vontade com azeite. Berberine.',{kcal:550,p:45,c:40,f:18})}
+${ml('🥒','16:00','Lanche Tarde','<strong>Opção 1:</strong> 5-6 palitos de cenoura/pepino + 2 col. sopa de homus<br><strong>Opção 2:</strong> 1 pote de iogurte grego natural (170g)<br><strong>Opção 3:</strong> 1 ovo cozido + 5 castanhas',{kcal:150,p:10,c:12,f:6})}
+${ml('🌙','19:30','Jantar (SEM CARB DENSO)','<strong>Opção 1:</strong> 1 filé de frango grelhado (150g) + salada grande (rúcula, tomate, ¼ abacate, 1 col. sopa de azeite)<br><strong>Opção 2:</strong> Omelete de 3 ovos + abobrinha grelhada + salada<br><strong>Opção 3:</strong> 4 col. sopa de carne moída refogada + legumes salteados (pimentão, cebola, abobrinha)',{kcal:450,p:38,c:10,f:28})}
+${ml('😴','21:30','Ceia + Supps','Chá camomila + suplementos noturnos. Opcional: 3 col. sopa cottage cheese.',null)}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos da noite</div>${sp(S_NIT,'#a855f7')}</div>`;
+
+const MEALS_RUN = `
+${ml('💊','7:00','SAMe (Jejum)','1 cápsula + 1 copo grande de água',null)}
+${ml('🍳','7:30','Café da Manhã','3 ovos + 1 fatia pão integral + 1 banana + café + suplementos.',{kcal:500,p:35,c:35,f:22})}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos do café</div>${sp(S_BRK)}</div>
+${ml('🥜','10:30','Lanche','Castanhas (30g) + 1 fruta',{kcal:250,p:10,c:25,f:12})}
+${ml('🍛','12:30','Almoço','Marmita — pode aumentar arroz (+2 col. sopa extra ≈ 200g total) pra repor glicogênio. Berberine.',{kcal:700,p:45,c:70,f:18})}
+${ml('🍌','16:00','Pré-corrida','1 banana média (esperar 30-40 min antes de correr)',{kcal:100,p:1,c:25,f:0})}
+${ml('🏃','17–18h','Corrida','Hidratar bem antes (300ml) e depois (500ml).',null)}
+${ml('🥤','18:15','Pós-corrida','1 scoop Whey + 1 banana + creatina 5g',{kcal:300,p:30,c:35,f:5})}
+${ml('🌙','20:00','Jantar','<strong>Opção 1:</strong> Sopa de frango com legumes (cenoura, abobrinha, batata) — 1 tigela grande<br><strong>Opção 2:</strong> 1 filé de frango + 4 col. sopa de arroz + vegetais',{kcal:500,p:40,c:45,f:12})}
+${ml('😴','21:30','Ceia + Supps','Chá + suplementos noturnos.',null)}
+<div style="padding:4px 0 4px 76px"><div class="section-title" style="padding-top:4px;margin-bottom:8px">💊 Suplementos da noite</div>${sp(S_NIT,'#a855f7')}</div>`;
+
+// ===== RUNNING WITH DETAILED PACE =====
+function buildCorrida(day){
+  const label=day==='ter'?'Terça':'Quarta';
+  const isTer=day==='ter';
+  return `
+    <div class="daily-summary">${chip('var(--blue)','Corrida')}${chip('var(--yellow)','~2.150 kcal')}${chip('var(--blue)','Carbs: alto')}</div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(59,130,246,.12)">🏃</div><h3>Corrida — ${label}</h3><span class="tag" style="background:rgba(59,130,246,.15);color:var(--blue)">Meta: 5K sub-30</span></div>
+      <p style="color:var(--text2);font-size:.85rem;margin-bottom:16px">Pace atual: <strong style="color:var(--blue)">6:30/km</strong> → Meta: <strong style="color:var(--accent)">5:59/km</strong></p>
+
+      <div class="phase-card">
+        <h4><span class="phase-badge" style="background:rgba(34,197,94,.15);color:var(--accent)">Fase 1</span> Base — Semanas 1-4</h4>
+        <p>${isTer
+          ?'<strong>Terça: 3km easy pace</strong> — ritmo confortável de conversação. Não se preocupe com velocidade.'
+          :'<strong>Quarta: 3.5km</strong> — ritmo fácil nos primeiros 3km, último 500m mais forte (acelerar naturalmente).'}</p>
+        <table class="pace-table"><tr><th>Distância</th><th>Pace alvo</th><th>Tempo total</th><th>Sensação</th></tr>
+        ${isTer
+          ?'<tr><td>3 km</td><td>6:30-7:00/km</td><td>~20 min</td><td>Leve, conversação</td></tr>'
+          :'<tr><td>3 km easy</td><td>6:30-7:00/km</td><td>~20 min</td><td>Confortável</td></tr><tr><td>500m forte</td><td>5:45-6:00/km</td><td>~3 min</td><td>Esforço controlado</td></tr>'
+        }</table>
+      </div>
+
+      <div class="phase-card">
+        <h4><span class="phase-badge" style="background:rgba(59,130,246,.15);color:var(--blue)">Fase 2</span> Build — Semanas 5-8</h4>
+        <p>${isTer
+          ?'<strong>Terça: 3.5km com intervalos</strong> — alternar 1 min forte / 1 min leve. Após aquecer 800m.'
+          :'<strong>Quarta: 4km steady pace</strong> — ritmo constante, manter respiração controlada.'}</p>
+        <table class="pace-table"><tr><th>Distância</th><th>Pace alvo</th><th>Tempo total</th><th>Sensação</th></tr>
+        ${isTer
+          ?'<tr><td>800m aquec.</td><td>6:30/km</td><td>~5 min</td><td>Leve</td></tr><tr><td>2km intervalos</td><td>5:30↔6:30/km</td><td>~12 min</td><td>Alternando</td></tr><tr><td>700m volta calma</td><td>7:00/km</td><td>~5 min</td><td>Recuperação</td></tr>'
+          :'<tr><td>4 km steady</td><td>6:15/km</td><td>~25 min</td><td>Moderado constante</td></tr>'
+        }</table>
+      </div>
+
+      <div class="phase-card">
+        <h4><span class="phase-badge" style="background:rgba(249,115,22,.15);color:var(--orange)">Fase 3</span> Push — Semanas 9-12</h4>
+        <p>${isTer
+          ?'<strong>Terça: 4km fartlek</strong> — varia velocidade de forma livre: postes, subidas, sprints curtos.'
+          :'<strong>Quarta: 5km steady</strong> — distância e pace alvo. Simulação de prova.'}</p>
+        <table class="pace-table"><tr><th>Distância</th><th>Pace alvo</th><th>Tempo total</th><th>Sensação</th></tr>
+        ${isTer
+          ?'<tr><td>1km aquec.</td><td>6:15/km</td><td>~6 min</td><td>Leve-moderado</td></tr><tr><td>2km fartlek</td><td>5:15↔6:15/km</td><td>~12 min</td><td>Forte/recupera</td></tr><tr><td>1km volta</td><td>6:30/km</td><td>~7 min</td><td>Calmo</td></tr>'
+          :'<tr><td>5 km</td><td>5:59/km</td><td>~29:55 min</td><td>🎯 Meta!</td></tr>'
+        }</table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(59,130,246,.12)">🍽️</div><h3>Alimentação — ${label}</h3></div>
+      ${MEALS_RUN}
+    </div>`;
+}
+
+// ===== OVERVIEW =====
+function buildOverview(){
+  return `
+    <div class="section-title">Semana de Treino</div>
+    <div class="week-grid">
+      ${DAYS.filter(d=>d.id!=='overview'&&d.id!=='sleep').map(d=>`
+        <div class="week-card" onclick="switchTab('${d.id}')">
+          <div class="wday">${d.label}</div><div class="wemoji">${d.emoji}</div>
+          <div class="wlabel" style="color:${d.color||'var(--text)'}">${d.short}</div>
+          <div class="wcal">${d.id==='sex'||d.id==='dom'?'~1.900 kcal':'~2.150 kcal'}</div>
+        </div>`).join('')}
+    </div>
+    <div class="card" style="margin-top:24px">
+      <div class="card-header"><div class="icon" style="background:var(--accent-glow)">🎯</div><h3>Metas (12 semanas)</h3></div>
+      <div style="display:grid;gap:10px">
+        ${[['🏃','5K sub-30min (pace 5:59/km)','6:30 → 5:59','var(--blue)'],['⚖️','Perda de gordura + massa','-400 kcal/dia','var(--accent)'],['💪','Hipertrofia com supersets','45min/sessão','var(--orange)']].map(([e,t,v,c])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-xs)"><span style="font-size:.88rem">${e} ${t}</span><span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:${c}">${v}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(234,179,8,.12)">📊</div><h3>Macros — Dia de Treino</h3></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+        ${[['2150','KCAL','var(--yellow)','rgba(234,179,8,.1)'],['155g','PROTEÍNA','var(--accent)','rgba(34,197,94,.1)'],['220g','CARBS','var(--blue)','rgba(59,130,246,.1)'],['75g','GORDURA','var(--orange)','rgba(249,115,22,.1)']].map(([v,l,c,bg])=>`<div style="background:${bg};border-radius:var(--radius-xs);padding:14px 8px"><div style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:${c}">${v}</div><div style="font-size:.7rem;color:var(--text3);margin-top:2px">${l}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(168,85,247,.12)">💊</div><h3>Suplementos — Resumo</h3></div>
+      <div class="section-title" style="padding-top:4px">☀️ Jejum (7:00)</div>${sp(S_FAST,'#eab308')}
+      <div class="section-title">🍳 Café (7:30)</div>${sp(S_BRK,'#22c55e')}
+      <div class="section-title">🍽️ Almoço (12:30)</div>${sp(S_LUN,'#3b82f6')}
+      <div class="section-title">🌙 Noite (21:30)</div>${sp(S_NIT,'#a855f7')}
+    </div>`;
+}
+
+// ===== TRAINING DAYS =====
+function buildSeg(){
+  return `
+    <div class="daily-summary">${chip('var(--accent)','Treino 17–18h')}${chip('var(--yellow)','~2.150 kcal')}${chip('var(--blue)','Carbs: alto')}</div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:var(--accent-glow)">💪</div><h3>TREINO A — Upper Body (Supersets)</h3><span class="tag" style="background:rgba(34,197,94,.15);color:var(--accent)">~45 MIN</span></div>
+      <div class="warmup"><h4>🔥 Aquecimento (3 min)</h4><p>1 min jumping jacks → 10 rotações de ombro cada lado → 10 flexões lentas</p></div>
+      <div class="superset-label">⚡ Bloco 1 — Peito + Costas (Superset)</div>
+      ${ex('A1','Supino com Halteres','4×10-12','Peitoral, tríceps, deltóide anterior','→ vai pro A2 sem descanso')}
+      ${ex('A2','Remada na Máquina/Cable','4×10-12','Dorsal, rombóides, bíceps','60s descanso, volta pro A1')}
+      <div class="superset-label">⚡ Bloco 2 — Ombros (Superset)</div>
+      ${ex('B1','Shoulder Press','3×12','Deltóide anterior e lateral','→ vai pro B2')}
+      ${ex('B2','Face Pull','3×15','Deltóide posterior, trapézio, rotadores','60s descanso, volta pro B1')}
+      <div class="superset-label">⚡ Bloco 3 — Braços (Superset)</div>
+      ${ex('C1','Rosca Bíceps','3×12','Bíceps, braquial','→ vai pro C2')}
+      ${ex('C2','Tríceps Corda','3×12','Tríceps','45s descanso, volta pro C1')}
+      <div class="finisher"><h4>🔥 Finisher (5-7 min)</h4><p>Escada 5 min intensidade moderada-alta OU 3 rounds de 30s sprint esteira + 30s leve</p></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="icon" style="background:rgba(34,197,94,.12)">🍽️</div><h3>Alimentação — Segunda</h3></div>${MEALS_TRAIN}</div>`;
+}
+
+function buildQui(){
+  const c='var(--accent)';
+  return `
+    <div class="daily-summary">${chip('var(--accent)','Treino 17–18h')}${chip('var(--yellow)','~2.150 kcal')}${chip('var(--blue)','Carbs: alto')}</div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:var(--accent-glow)">🦵</div><h3>TREINO B — Lower Body + Core</h3><span class="tag" style="background:rgba(34,197,94,.15);color:var(--accent)">~45 MIN</span></div>
+      <div class="warmup"><h4>🔥 Aquecimento (3 min)</h4><p>2 min caminhada rápida → 10 agachamentos livres → 10 lunges alternados</p></div>
+      <div class="superset-label">⚡ Bloco 1 — Quad + Posterior (Superset)</div>
+      ${ex('A1','Leg Press Horizontal','4×12-15','Quadríceps, glúteos','→ vai pro A2 sem descanso')}
+      ${ex('A2','Stiff com Halteres','4×10-12','Posterior de coxa, glúteos, lombar','60s descanso, volta pro A1')}
+      <div class="superset-label">⚡ Bloco 2 — Unilateral + Glúteos (Superset)</div>
+      ${ex('B1','Bulgarian Split Squat','3×10 cada','Quadríceps, glúteos, equilíbrio','→ vai pro B2')}
+      ${ex('B2','Hip Thrust','3×12','Glúteos, posterior','60s descanso, volta pro B1')}
+      <div class="superset-label">⚡ Bloco 3 — Panturrilha + Core</div>
+      ${ex('C1','Panturrilha em Pé','3×15','Gastrocnêmio, sóleo')}
+      ${ex('C2','Prancha Frontal','3×45s','Core, transverso abdominal')}
+      ${ex('C3','Russian Twist','3×20 (10/lado)','Oblíquos, core')}
+      <div class="finisher"><h4>🔥 Finisher (5-7 min)</h4><p>4 rounds: 20s sprint esteira + 40s caminhada OU escada 5 min</p></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="icon" style="background:rgba(34,197,94,.12)">🍽️</div><h3>Alimentação — Quinta</h3></div>${MEALS_TRAIN}</div>`;
+}
+
+function buildSab(){
+  const c='var(--orange)';
+  return `
+    <div class="daily-summary">${chip('var(--orange)','Treino 17–18h')}${chip('var(--yellow)','~2.150 kcal')}${chip('var(--purple)','🍷 Pode álcool')}</div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(249,115,22,.12)">⚡</div><h3>TREINO C — Full Body Circuito</h3><span class="tag" style="background:rgba(249,115,22,.15);color:var(--orange)">~45 MIN</span></div>
+      <div class="warmup"><h4>🔥 Aquecimento (3 min)</h4><p>1 min jumping jacks → 10 agachamentos → 5 flexões</p></div>
+      <div class="superset-label" style="border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.1);color:var(--orange)">🔄 Circuito 1 — 4× (90s descanso)</div>
+      ${ex('1','Goblet Squat','12 reps','Quadríceps, glúteos, core','',c)}
+      ${ex('2','Push-Up','12 reps','Peitoral, tríceps, core','',c)}
+      ${ex('3','Remada Unilateral','10 cada','Dorsal, rombóides, bíceps','',c)}
+      ${ex('4','Lunge Reverso','10 cada','Quadríceps, glúteos','',c)}
+      ${ex('5','Mountain Climbers','20 (10/lado)','Core, cardio, ombros','',c)}
+      <div class="superset-label" style="border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.1);color:var(--orange)">🔄 Circuito 2 — 3× (60s descanso)</div>
+      ${ex('1','Chest Fly','12 reps','Peitoral','',c)}
+      ${ex('2','Thruster','10 reps','Full body','',c)}
+      ${ex('3','TRX Row','12 reps','Costas, bíceps, core','',c)}
+      ${ex('4','Prancha c/ Shoulder Tap','10 cada','Core, estabilidade','',c)}
+      <div class="finisher"><h4>🔥 Finisher Tabata (3 min)</h4><p>Escada ou esteira: 20s ALL OUT → 10s leve × 6 rounds</p></div>
+    </div>
+    <div class="card"><div class="card-header"><div class="icon" style="background:rgba(249,115,22,.12)">🍽️</div><h3>Alimentação — Sábado</h3></div>${MEALS_TRAIN}</div>
+    <div class="alcohol-note"><h4>🍷 Álcool — Sábado</h4><p>Se for beber: vinho tinto ou destilado. Max 1–2 doses. Comer proteína antes. 1 copo de água entre cada dose. Dormir 30min mais cedo.</p></div>`;
+}
+
+function buildOff(day){
+  const label=day==='sex'?'Sexta':'Domingo';
+  const isAlcohol=day==='sex';
+  return `
+    <div class="daily-summary">${chip('var(--text3)','Dia OFF')}${chip('var(--yellow)','~1.900 kcal')}${chip('var(--text3)','Carbs: reduzido')}${isAlcohol?chip('var(--purple)','🍷 Pode álcool'):''}</div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(104,104,122,.12)">🛋️</div><h3>Recuperação — ${label}</h3></div>
+      <p style="color:var(--text2);font-size:.88rem;line-height:1.6;padding:0 4px">Descanso ativo: mobilidade, alongamento 10-15 min, caminhada leve 20-30 min. Hidratação reforçada (3L). Calorias reduzidas (~1.900) com menos carbs e mesma proteína.</p>
+    </div>
+    <div class="card"><div class="card-header"><div class="icon" style="background:rgba(104,104,122,.12)">🍽️</div><h3>Alimentação — ${label} (OFF)</h3></div>${MEALS_OFF}</div>
+    ${isAlcohol?'<div class="alcohol-note"><h4>🍷 Álcool — Sexta</h4><p>Se for beber: vinho tinto ou destilado. Max 1–2 doses. Comer proteína antes. Hidratar entre doses. Dormir 30min mais cedo.</p></div>':''}`;
+}
+
+function buildSleep(){
+  return `
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(168,85,247,.12)">😴</div><h3>Protocolo de Sono</h3><span class="tag" style="background:rgba(168,85,247,.15);color:var(--purple)">7.5–8h</span></div>
+      ${[['21:30','<strong>Última refeição + Suplementos noturnos.</strong> Neuro-Mag, Ashwagandha, NAC, Glutathione, Citicoline, Berberine 2ª dose.'],['22:00','<strong>Desligar telas</strong> ou Night Shift. Luz baixa. Chá de camomila.'],['22:30','<strong>Wind down:</strong> Leitura, alongamento leve ou respiração 4-7-8 (inspira 4s, segura 7s, expira 8s).'],['23:00','<strong>Na cama, luzes apagadas.</strong> Meta: dormir até 23:15.'],['7:00','<strong>Acordar.</strong> Luz solar nos primeiros 10 min. 500ml de água.']].map(([t,d])=>`<div class="sleep-item"><div class="sleep-time" style="${t==='7:00'?'color:var(--accent)':''}">${t}</div><p>${d}</p></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="icon" style="background:rgba(6,182,212,.12)">💡</div><h3>Dicas de Qualidade</h3></div>
+      <div style="display:grid;gap:10px">
+        ${[['🌡️','Quarto frio (18–20°C) e escuro — blackout se necessário'],['☕','Último café até 15:00 — L-Theanine de manhã suaviza'],['💊','Ashwagandha + Neuro-Mag à noite = combo perfeito'],['🏋️','Treino 17–18h é ideal — evitar exercício após 20h'],['🍷','Dias de álcool: dormir 30min mais cedo'],['⏰','Consistência: mesmo horário nos fins de semana (±30 min)'],['📱','Modo avião a partir das 22h'],['💧','Cortar líquidos pesados depois das 21h']].map(([e,t])=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--surface2);border-radius:var(--radius-xs)"><span style="font-size:1.1rem;flex-shrink:0">${e}</span><span style="font-size:.85rem;color:var(--text2);line-height:1.5">${t}</span></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// RENDER
+const nav=document.getElementById('nav'),main=document.getElementById('main');
+DAYS.forEach(d=>{const btn=document.createElement('button');btn.textContent=d.id==='overview'||d.id==='sleep'?d.short:`${d.emoji} ${d.label}`;btn.dataset.id=d.id;btn.onclick=()=>switchTab(d.id);nav.appendChild(btn)});
+
+function switchTab(id){
+  nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  let h='';
+  switch(id){
+    case'overview':h=buildOverview();break;
+    case'seg':h=buildSeg();break;
+    case'ter':h=buildCorrida('ter');break;
+    case'qua':h=buildCorrida('qua');break;
+    case'qui':h=buildQui();break;
+    case'sex':h=buildOff('sex');break;
+    case'sab':h=buildSab();break;
+    case'dom':h=buildOff('dom');break;
+    case'sleep':h=buildSleep();break;
+  }
+  main.innerHTML=`<div class="day-section active">${h}</div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+switchTab('overview');
+</script>
+</body>
+</html>
