@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TREINO - Andre Vasconcelos</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treino AV">
+<meta name="theme-color" content="#22c55e">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0c;--surface:#141418;--surface2:#1c1c22;--surface3:#24242c;--border:#2a2a34;--text:#e8e8ed;--text2:#9898a8;--text3:#68687a;--accent:#22c55e;--accent2:#16a34a;--accent-glow:rgba(34,197,94,.15);--blue:#3b82f6;--orange:#f97316;--purple:#a855f7;--red:#ef4444;--yellow:#eab308;--pink:#ec4899;--cyan:#06b6d4;--radius:16px;--radius-sm:10px;--radius-xs:6px}
@@ -34,6 +38,14 @@
 /* Timer */
 .timer-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;text-align:center;overflow:hidden}.timer-bar .timer-display{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;color:var(--accent);margin:8px 0}.timer-bar .timer-btns{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}.timer-btn{padding:8px 16px;border-radius:var(--radius-sm);border:none;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}.timer-btn.start{background:var(--accent);color:var(--bg)}.timer-btn.start:hover{background:var(--accent2)}.timer-btn.stop{background:var(--red);color:#fff}.timer-btn.pause{background:var(--yellow);color:var(--bg)}.timer-btn.disabled{opacity:.4;pointer-events:none}
 @media(prefers-color-scheme:light){.timer-btn.start{color:#fff}}
+/* Floating mini timer */
+.timer-float{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(120%);z-index:150;background:var(--surface);border:1px solid var(--accent);border-radius:24px;padding:8px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 0 1px rgba(34,197,94,.15);transition:transform .25s ease;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);max-width:calc(100vw - 28px)}
+.timer-float.show{transform:translateX(-50%) translateY(0)}
+.timer-float .tf-time{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--accent);min-width:74px;text-align:center}
+.timer-float .tf-btn{background:transparent;border:none;color:var(--text);font-size:1.05rem;cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .2s;line-height:1}
+.timer-float .tf-btn:hover{background:var(--surface2)}
+.timer-float .tf-btn.tf-stop{color:var(--red)}
+@media(prefers-color-scheme:light){.timer-float{background:rgba(255,255,255,.96)}}
 /* Calendar */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0}.cal-header{font-size:.6rem;font-weight:700;text-transform:uppercase;color:var(--text3);text-align:center;padding:4px 0}.cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:500;border:1px solid var(--border);background:var(--surface2);color:var(--text3);position:relative}.cal-day.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:var(--accent)}.cal-day.done::after{content:'\2713';position:absolute;font-size:.5rem;bottom:1px;right:3px;color:var(--accent)}.cal-day.today{border-color:var(--accent);box-shadow:0 0 8px rgba(34,197,94,.3)}.cal-day.empty{border:none;background:none}
 /* Swap btn */
@@ -150,17 +162,26 @@ function ex(num,name,sets,muscles,note='',color='var(--accent)'){
 // ===== TIMER =====
 let timerInterval=null,timerStart=0,timerElapsed=0,timerRunning=false,timerDay='';
 function fmtTime(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return `${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-function startTimer(day){timerDay=day;timerStart=Date.now()-timerElapsed;timerRunning=true;timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;updateTimerDisplay()},1000);updateTimerDisplay()}
-function pauseTimer(){clearInterval(timerInterval);timerRunning=false;updateTimerDisplay()}
+function persistTimer(){LS.set('timerState',{start:timerStart,elapsed:timerElapsed,running:timerRunning,day:timerDay})}
+function restoreTimer(){
+  const t=LS.get('timerState',null);if(!t)return;
+  timerDay=t.day||'';timerElapsed=t.elapsed||0;timerStart=t.start||0;
+  if(t.running){
+    timerElapsed=Date.now()-timerStart;timerRunning=true;
+    timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;persistTimer();updateTimerDisplay()},1000);
+  }
+}
+function startTimer(day){timerDay=day;timerStart=Date.now()-timerElapsed;timerRunning=true;persistTimer();timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;persistTimer();updateTimerDisplay()},1000);updateTimerDisplay()}
+function pauseTimer(){clearInterval(timerInterval);timerRunning=false;persistTimer();updateTimerDisplay()}
 function stopTimer(){
   clearInterval(timerInterval);timerRunning=false;
   const dateStr=new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
   const dayType=getEffectiveType(timerDay);
   STATE.workouts[dateStr]={done:true,type:dayType,duration:timerElapsed,feeling:''};
-  save();timerElapsed=0;
+  save();timerElapsed=0;persistTimer();
   showQuiz(dateStr);
 }
-function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerElapsed=0;updateTimerDisplay()}
+function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerElapsed=0;persistTimer();updateTimerDisplay()}
 function quickCheck(dayId){
   const dateStr=new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
   STATE.workouts[dateStr]={done:true,type:getEffectiveType(dayId),duration:0,feeling:''};
@@ -175,7 +196,31 @@ function updateTimerDisplay(){
   if(startBtn)startBtn.className=`timer-btn ${timerRunning?'disabled':'start'}`;
   if(pauseBtn)pauseBtn.className=`timer-btn ${timerRunning?'pause':'disabled'}`;
   if(stopBtn)stopBtn.className=`timer-btn ${timerElapsed>0?'stop':'disabled'}`;
+  updateFloatingTimer();
 }
+function updateFloatingTimer(){
+  let f=document.getElementById('timer-float');
+  const shouldExist=timerRunning||timerElapsed>0;
+  if(!shouldExist){if(f)f.remove();return}
+  if(!f){
+    f=document.createElement('div');f.id='timer-float';f.className='timer-float';
+    f.innerHTML=`<span class="tf-time" id="tf-time">00:00:00</span>
+      <button class="tf-btn" id="tf-toggle" title="Pausar/Retomar">⏸</button>
+      <button class="tf-btn tf-stop" id="tf-stop" title="Finalizar">⏹</button>`;
+    document.body.appendChild(f);
+    f.querySelector('#tf-toggle').onclick=()=>{timerRunning?pauseTimer():startTimer(timerDay)};
+    f.querySelector('#tf-stop').onclick=stopTimer;
+  }
+  f.querySelector('#tf-time').textContent=fmtTime(timerElapsed);
+  f.querySelector('#tf-toggle').textContent=timerRunning?'⏸':'▶';
+  // Show only when original timer-bar is out of view
+  const bar=document.querySelector('.timer-bar');
+  if(!bar){f.classList.add('show');return}
+  const r=bar.getBoundingClientRect();
+  const visible=r.bottom>50;
+  f.classList.toggle('show',!visible);
+}
+window.addEventListener('scroll',updateFloatingTimer,{passive:true});
 
 function showQuiz(dateStr){
   const root=document.getElementById('modal-root');
@@ -443,7 +488,9 @@ function switchTab(id,param){
   renderTab(id,param);
   window.scrollTo({top:0,behavior:'smooth'});
 }
+restoreTimer();
 switchTab('home');
+updateFloatingTimer();
 
 // ===== GLOBAL FUNCTIONS =====
 function loadYT(el,id){el.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen frameborder="0"></iframe>`}
